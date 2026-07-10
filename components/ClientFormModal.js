@@ -6,7 +6,7 @@ import { GENDERS, PLATFORMS, CLIENT_STATUSES } from '@/lib/constants';
 export default function ClientFormModal({ initial, onClose, onSaved }) {
   const [form, setForm] = useState({
     clientName: initial?.['client name'] || '',
-    phone: initial?.phone || '',
+    phone: initial?.phone ? initial.phone.replace(/\D/g, '') : '',
     gender: initial?.gender || GENDERS[0],
     language: initial?.language || '',
     platform: initial?.platform || PLATFORMS[0],
@@ -16,6 +16,10 @@ export default function ClientFormModal({ initial, onClose, onSaved }) {
   const [error, setError] = useState('');
 
   const set = (k, v) => setForm((f) => ({ ...f, [k]: v }));
+
+  function setPhone(v) {
+    set('phone', v.replace(/\D/g, '').slice(0, 15));
+  }
 
   async function submit(e) {
     e.preventDefault();
@@ -39,7 +43,20 @@ export default function ClientFormModal({ initial, onClose, onSaved }) {
     <Modal title={initial ? 'Edit Client' : 'Add Client'} onClose={onClose}>
       <form onSubmit={submit} className="space-y-4">
         <Field label="Client Name" value={form.clientName} onChange={(v) => set('clientName', v)} required />
-        <Field label="Phone" value={form.phone} onChange={(v) => set('phone', v)} required />
+        <div>
+          <label className="block text-xs font-medium text-slate-500 mb-1">Phone</label>
+          <input
+            required
+            type="tel"
+            inputMode="numeric"
+            pattern="[0-9]*"
+            placeholder="0771234567"
+            value={form.phone}
+            onChange={(e) => setPhone(e.target.value)}
+            className="w-full border border-slate-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-200"
+          />
+          <p className="text-xs text-slate-400 mt-1">Numbers only — no spaces, dashes, or symbols.</p>
+        </div>
         <div>
           <label className="block text-xs font-medium text-slate-500 mb-1">Gender</label>
           <select value={form.gender} onChange={(e) => set('gender', e.target.value)} className="w-full border border-slate-200 rounded-xl px-3 py-2 text-sm">
