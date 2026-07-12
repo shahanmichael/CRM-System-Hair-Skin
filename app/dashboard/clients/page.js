@@ -1,6 +1,6 @@
 'use client';
 import { useEffect, useState } from 'react';
-import { RefreshCw, Plus, Download, Users, UserCheck, UserX, Phone } from 'lucide-react';
+import { RefreshCw, Plus, Download, Users, UserCheck, UserX, Phone, ArrowUpDown } from 'lucide-react';
 import StatCard from '@/components/StatCard';
 import SearchBar from '@/components/SearchBar';
 import Pagination from '@/components/Pagination';
