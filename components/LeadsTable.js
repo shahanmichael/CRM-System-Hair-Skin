@@ -1,6 +1,6 @@
 'use client';
 import { useEffect, useState } from 'react';
-import { RefreshCw, Download, Users, CalendarDays } from 'lucide-react';
+import { RefreshCw, Download, Users, CalendarDays, Pencil } from 'lucide-react';
 import SearchBar from './SearchBar';
 import Pagination from './Pagination';
 import TableSettingsMenu from './TableSettingsMenu';
@@ -151,7 +151,9 @@ export default function LeadsTable({ title, subtitle, tableSlug, columns, storag
                     ))}
                     {editableFields.length > 0 && (
                       <td className="px-4 py-3">
-                        <button onClick={() => setEditing(row)} className="text-brand-600 text-xs font-medium hover:underline">Edit</button>
+                        <button onClick={() => setEditing(row)} title="Edit" className="p-1.5 rounded-lg text-brand-600 hover:bg-brand-50">
+                          <Pencil size={15} />
+                        </button>
                       </td>
                     )}
                   </tr>
