@@ -5,6 +5,7 @@ import StatCard from '@/components/StatCard';
 import DailyActivityChart from '@/components/charts/DailyActivityChart';
 import AppointmentsEnteredChart from '@/components/charts/AppointmentsEnteredChart';
 import AppointmentsVsActivityChart from '@/components/charts/AppointmentsVsActivityChart';
+import DailyRecordsBreakdownChart from '@/components/charts/DailyRecordsBreakdownChart';
 
 export default function DailyRecordsAnalyticsPage() {
   const [stats, setStats] = useState(null);
@@ -43,6 +44,7 @@ export default function DailyRecordsAnalyticsPage() {
           <div className="grid grid-cols-1 gap-4">
             {stats ? (
               <>
+                <DailyRecordsBreakdownChart data={stats.trend} />
                 <DailyActivityChart data={stats.trend} />
                 <AppointmentsEnteredChart data={stats.trend} />
                 <AppointmentsVsActivityChart data={stats.trend} />
