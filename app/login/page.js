@@ -22,7 +22,9 @@ export default function LoginPage() {
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || 'Login failed');
-      router.push(data.usertype === 'admin' ? '/dashboard' : '/dashboard/welcome');
+      if (data.usertype === 'admin') router.push('/dashboard');
+      else if (data.usertype === 'social') router.push('/dashboard/daily-records/analytics');
+      else router.push('/dashboard/welcome');
       router.refresh();
     } catch (err) {
       setError(err.message);

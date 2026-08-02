@@ -10,6 +10,12 @@ export async function middleware(req) {
     if (!session) {
       return NextResponse.redirect(new URL('/login', req.url));
     }
+    if (session.usertype === 'social') {
+      if (!pathname.startsWith('/dashboard/daily-records/analytics')) {
+        return NextResponse.redirect(new URL('/dashboard/daily-records/analytics', req.url));
+      }
+      return NextResponse.next();
+    }
     if (pathname.startsWith('/dashboard/users') && session.usertype !== 'admin') {
       return NextResponse.redirect(new URL('/dashboard/welcome', req.url));
     }
@@ -25,7 +31,16 @@ export async function middleware(req) {
   }
 
   if (pathname === '/login' && session) {
-    return NextResponse.redirect(new URL(session.usertype === 'admin' ? '/dashboard' : '/dashboard/welcome', req.url));
+    return NextResponse.redirect(
+      new URL(
+        session.usertype === 'admin'
+          ? '/dashboard'
+          : session.usertype === 'social'
+          ? '/dashboard/daily-records/analytics'
+          : '/dashboard/welcome',
+        req.url
+      )
+    );
   }
 
   return NextResponse.next();

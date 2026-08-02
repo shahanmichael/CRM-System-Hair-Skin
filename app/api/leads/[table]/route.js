@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { getSheetRows, updateCell } from '@/lib/googleSheets';
-import { requireSession } from '@/lib/apiAuth';
+import { requireFullAccess } from '@/lib/apiAuth';
 import { withErrorHandling } from '@/lib/withErrorHandling';
 import {
   FAT_CONTOURING_EDITABLE,
@@ -36,7 +36,7 @@ const EDITABLE_MAP = {
 const LEADS_SHEET_ID = process.env.GOOGLE_LEADS_SHEET_ID;
 
 export const GET = withErrorHandling(async (req, { params }) => {
-  const session = await requireSession();
+  const session = await requireFullAccess();
   if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
   const sheetName = SHEET_MAP[params.table];
@@ -90,7 +90,7 @@ export const GET = withErrorHandling(async (req, { params }) => {
 });
 
 export const PATCH = withErrorHandling(async (req, { params }) => {
-  const session = await requireSession();
+  const session = await requireFullAccess();
   if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
   const sheetName = SHEET_MAP[params.table];

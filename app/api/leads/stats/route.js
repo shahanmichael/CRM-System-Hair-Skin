@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { getSheetRows } from '@/lib/googleSheets';
-import { requireSession } from '@/lib/apiAuth';
+import { requireFullAccess } from '@/lib/apiAuth';
 import { withErrorHandling } from '@/lib/withErrorHandling';
 
 const LEADS_SHEET_ID = process.env.GOOGLE_LEADS_SHEET_ID;
@@ -16,7 +16,7 @@ const LEAD_TABLES = [
 ];
 
 export const GET = withErrorHandling(async () => {
-  const session = await requireSession();
+  const session = await requireFullAccess();
   if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   if (!LEADS_SHEET_ID) {
     return NextResponse.json(

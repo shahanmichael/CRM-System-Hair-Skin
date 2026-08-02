@@ -9,17 +9,22 @@ export default function Sidebar({ user }) {
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const isAdmin = user.usertype === 'admin';
+  const isSocial = user.usertype === 'social';
 
-  const links = [
-    { href: isAdmin ? '/dashboard' : '/dashboard/welcome', label: 'Dashboard', icon: LayoutDashboard },
-    { href: '/dashboard/clients', label: 'Client List', icon: Users },
-    { href: '/dashboard/appointments', label: 'Appointment List', icon: CalendarCheck },
-  ];
+  const links = isSocial
+    ? [{ href: '/dashboard/daily-records/analytics', label: 'Daily Records Analytics', icon: NotebookPen }]
+    : [
+        { href: isAdmin ? '/dashboard' : '/dashboard/welcome', label: 'Dashboard', icon: LayoutDashboard },
+        { href: '/dashboard/clients', label: 'Client List', icon: Users },
+        { href: '/dashboard/appointments', label: 'Appointment List', icon: CalendarCheck },
+      ];
   if (isAdmin) {
     links.push({ href: '/dashboard/users', label: 'Users', icon: UserCog });
   }
 
-  const groups = [
+  const groups = isSocial
+    ? []
+    : [
     {
       key: 'leads',
       label: 'Lead Form',
