@@ -2,13 +2,22 @@ import { NextResponse } from 'next/server';
 import { getSheetRows, updateCell } from '@/lib/googleSheets';
 import { requireSession } from '@/lib/apiAuth';
 import { withErrorHandling } from '@/lib/withErrorHandling';
-import { FAT_CONTOURING_EDITABLE, BODY_FILLERS_EDITABLE } from '@/lib/constants';
+import {
+  FAT_CONTOURING_EDITABLE,
+  BODY_FILLERS_EDITABLE,
+  HYDRA_FACIAL_EDITABLE,
+  LIP_BLUSHING_FILLERS_EDITABLE,
+  ENDOLIFT_EDITABLE,
+} from '@/lib/constants';
 
 const PAGE_SIZE = 15;
 
 const SHEET_MAP = {
   'fat-contouring': 'FAT Contouring',
   'body-fillers': 'Body Fillers',
+  'hydra-facial': 'Hydra Facial',
+  'lip-blushing-fillers': 'Lip Blushing & Fillers',
+  'endolift': 'Endolift',
 };
 
 // Server-side whitelist — enforced regardless of what the client sends, so only
@@ -16,6 +25,9 @@ const SHEET_MAP = {
 const EDITABLE_MAP = {
   'fat-contouring': FAT_CONTOURING_EDITABLE,
   'body-fillers': BODY_FILLERS_EDITABLE,
+  'hydra-facial': HYDRA_FACIAL_EDITABLE,
+  'lip-blushing-fillers': LIP_BLUSHING_FILLERS_EDITABLE,
+  'endolift': ENDOLIFT_EDITABLE,
 };
 
 const LEADS_SHEET_ID = process.env.GOOGLE_LEADS_SHEET_ID;
