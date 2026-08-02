@@ -1,6 +1,6 @@
 'use client';
 import { useEffect, useState } from 'react';
-import { Users, CalendarDays, Flame, Syringe } from 'lucide-react';
+import { Users, CalendarDays, Flame, Syringe, Droplets, Heart, Zap } from 'lucide-react';
 import StatCard from '@/components/StatCard';
 import LeadsTrendChart from '@/components/charts/LeadsTrendChart';
 import LeadsByCityChart from '@/components/charts/LeadsByCityChart';
@@ -26,17 +26,22 @@ export default function LeadAnalyticsPage() {
   return (
     <div>
       <h1 className="text-xl font-bold text-slate-800 mb-1">Lead Analytics</h1>
-      <p className="text-sm text-slate-500 mb-6">Combined insight across FAT Contouring and Body Fillers leads.</p>
+      <p className="text-sm text-slate-500 mb-6">Combined insight across all lead forms.</p>
 
       {error ? (
         <div className="bg-white rounded-2xl border border-slate-100 shadow-soft p-5 text-sm text-rose-500">{error}</div>
       ) : (
         <>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
             <StatCard label="Total Leads" value={stats?.totalLeads ?? '—'} icon={Users} />
             <StatCard label="Today's Leads" value={stats?.todayLeads ?? '—'} accent="green" icon={CalendarDays} />
             <StatCard label="FAT Contouring" value={stats?.totalFat ?? '—'} accent="amber" icon={Flame} />
             <StatCard label="Body Fillers" value={stats?.totalBody ?? '—'} accent="amber" icon={Syringe} />
+          </div>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+            <StatCard label="Hydra" value={stats?.totalHydra ?? '—'} accent="amber" icon={Droplets} />
+            <StatCard label="Lip Blushing & Fillers" value={stats?.totalLipBlushing ?? '—'} accent="amber" icon={Heart} />
+            <StatCard label="Endolift" value={stats?.totalEndolift ?? '—'} accent="amber" icon={Zap} />
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">

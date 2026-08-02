@@ -5,6 +5,15 @@ import { withErrorHandling } from '@/lib/withErrorHandling';
 
 const LEADS_SHEET_ID = process.env.GOOGLE_LEADS_SHEET_ID;
 
+// Each entry: [key used in response fields, sheet tab name, trend series key]
+const LEAD_TABLES = [
+  { key: 'fat', sheet: 'FAT Contouring', trendKey: 'fatContouring', label: 'FAT Contouring' },
+  { key: 'body', sheet: 'Body Fillers', trendKey: 'bodyFillers', label: 'Body Fillers' },
+  { key: 'hydra', sheet: 'Hydra', trendKey: 'hydra', label: 'Hydra' },
+  { key: 'lipBlushing', sheet: 'Lip Blushing & Fillers', trendKey: 'lipBlushingFillers', label: 'Lip Blushing & Fillers' },
+  { key: 'endolift', sheet: 'Endolift', trendKey: 'endolift', label: 'Endolift' },
+];
+
 export const GET = withErrorHandling(async () => {
   const session = await requireSession();
   if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
@@ -15,19 +24,23 @@ export const GET = withErrorHandling(async () => {
     );
   }
 
-  const [{ rows: fatRows }, { rows: bodyRows }] = await Promise.all([
-    getSheetRows('FAT Contouring', { spreadsheetId: LEADS_SHEET_ID }),
-    getSheetRows('Body Fillers', { spreadsheetId: LEADS_SHEET_ID }),
-  ]);
+  const results = await Promise.all(
+    LEAD_TABLES.map((t) => getSheetRows(t.sheet, { spreadsheetId: LEADS_SHEET_ID }))
+  );
+  const rowsByTable = LEAD_TABLES.map((t, i) => ({ ...t, rows: results[i].rows }));
 
-  const allRows = [...fatRows, ...bodyRows];
+  const allRows = rowsByTable.flatMap((t) => t.rows);
   const todayKey = toDateKey(new Date());
 
-  const totalFat = fatRows.length;
-  const totalBody = bodyRows.length;
-  const todayLeads =
-    fatRows.filter((r) => toDateKey(parseDate(r.created_time)) === todayKey).length +
-    bodyRows.filter((r) => toDateKey(parseDate(r.created_time)) === todayKey).length;
+  const totals = {};
+  rowsByTable.forEach((t) => {
+    totals[t.key] = t.rows.length;
+  });
+
+  const todayLeads = rowsByTable.reduce(
+    (sum, t) => sum + t.rows.filter((r) => toDateKey(parseDate(r.created_time)) === todayKey).length,
+    0
+  );
 
   // Leads by city (combined, case-insensitive grouping, top 10) — the geographic-origin chart.
   const cityMap = new Map();
@@ -50,7 +63,10 @@ export const GET = withErrorHandling(async () => {
     .map(([platform, count]) => ({ platform, count }))
     .sort((a, b) => b.count - a.count);
 
-  // 14-day trend, both tables as separate series
+  // Leads by form type (combined) — for a breakdown chart
+  const byForm = rowsByTable.map((t) => ({ form: t.label, count: t.rows.length }));
+
+  // 14-day trend, each table as a separate series
   const days = Array.from({ length: 14 }, (_, i) => {
     const d = new Date();
     d.setDate(d.getDate() - (13 - i));
@@ -58,20 +74,24 @@ export const GET = withErrorHandling(async () => {
   });
   const trend = days.map((d) => {
     const key = toDateKey(d);
-    return {
-      date: d.toLocaleDateString('en-US', { day: 'numeric', month: 'short' }),
-      fatContouring: fatRows.filter((r) => toDateKey(parseDate(r.created_time)) === key).length,
-      bodyFillers: bodyRows.filter((r) => toDateKey(parseDate(r.created_time)) === key).length,
-    };
+    const point = { date: d.toLocaleDateString('en-US', { day: 'numeric', month: 'short' }) };
+    rowsByTable.forEach((t) => {
+      point[t.trendKey] = t.rows.filter((r) => toDateKey(parseDate(r.created_time)) === key).length;
+    });
+    return point;
   });
 
   return NextResponse.json({
-    totalFat,
-    totalBody,
-    totalLeads: totalFat + totalBody,
+    totalFat: totals.fat,
+    totalBody: totals.body,
+    totalHydra: totals.hydra,
+    totalLipBlushing: totals.lipBlushing,
+    totalEndolift: totals.endolift,
+    totalLeads: allRows.length,
     todayLeads,
     byCity,
     byPlatform,
+    byForm,
     trend,
   });
 });

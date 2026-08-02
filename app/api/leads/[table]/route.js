@@ -5,7 +5,7 @@ import { withErrorHandling } from '@/lib/withErrorHandling';
 import {
   FAT_CONTOURING_EDITABLE,
   BODY_FILLERS_EDITABLE,
-  HYDRA_FACIAL_EDITABLE,
+  HYDRA_EDITABLE,
   LIP_BLUSHING_FILLERS_EDITABLE,
   ENDOLIFT_EDITABLE,
 } from '@/lib/constants';
@@ -15,7 +15,7 @@ const PAGE_SIZE = 15;
 const SHEET_MAP = {
   'fat-contouring': 'FAT Contouring',
   'body-fillers': 'Body Fillers',
-  'hydra-facial': 'Hydra Facial',
+  'hydra': 'Hydra',
   'lip-blushing-fillers': 'Lip Blushing & Fillers',
   'endolift': 'Endolift',
 };
@@ -25,7 +25,7 @@ const SHEET_MAP = {
 const EDITABLE_MAP = {
   'fat-contouring': FAT_CONTOURING_EDITABLE,
   'body-fillers': BODY_FILLERS_EDITABLE,
-  'hydra-facial': HYDRA_FACIAL_EDITABLE,
+  'hydra': HYDRA_EDITABLE,
   'lip-blushing-fillers': LIP_BLUSHING_FILLERS_EDITABLE,
   'endolift': ENDOLIFT_EDITABLE,
 };

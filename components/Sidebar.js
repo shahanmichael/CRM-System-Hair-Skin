@@ -29,7 +29,7 @@ export default function Sidebar({ user }) {
         ...(isAdmin ? [{ href: '/dashboard/leads/analytics', label: 'Analytics' }] : []),
         { href: '/dashboard/leads/fat-contouring', label: 'FAT Contouring' },
         { href: '/dashboard/leads/body-fillers', label: 'Body Fillers' },
-        { href: '/dashboard/leads/hydra-facial', label: 'Hydra Facial' },
+        { href: '/dashboard/leads/hydra', label: 'Hydra' },
         { href: '/dashboard/leads/lip-blushing-fillers', label: 'Lip Blushing & Fillers' },
         { href: '/dashboard/leads/endolift', label: 'Endolift' },
       ],
