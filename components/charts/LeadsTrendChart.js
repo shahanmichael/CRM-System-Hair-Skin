@@ -24,6 +24,7 @@ export default function LeadsTrendChart({ data }) {
           <Line type="monotone" dataKey="hydra" name="Hydra" stroke="#06b6d4" strokeWidth={2} dot={false} />
           <Line type="monotone" dataKey="lipBlushingFillers" name="Lip Blushing & Fillers" stroke="#f43f5e" strokeWidth={2} dot={false} />
           <Line type="monotone" dataKey="endolift" name="Endolift" stroke="#f59e0b" strokeWidth={2} dot={false} />
+          <Line type="monotone" dataKey="elderWomens" name="Elder Womens" stroke="#a855f7" strokeWidth={2} dot={false} />
         </LineChart>
       </ResponsiveContainer>
     </div>

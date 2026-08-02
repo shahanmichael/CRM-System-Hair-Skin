@@ -1,6 +1,6 @@
 'use client';
 import { useEffect, useState } from 'react';
-import { Users, CalendarDays, Flame, Syringe, Droplets, Heart, Zap } from 'lucide-react';
+import { Users, CalendarDays, Flame, Syringe, Droplets, Heart, Zap, UserRound } from 'lucide-react';
 import StatCard from '@/components/StatCard';
 import LeadsTrendChart from '@/components/charts/LeadsTrendChart';
 import LeadsByCityChart from '@/components/charts/LeadsByCityChart';
@@ -42,6 +42,7 @@ export default function LeadAnalyticsPage() {
             <StatCard label="Hydra" value={stats?.totalHydra ?? '—'} accent="amber" icon={Droplets} />
             <StatCard label="Lip Blushing & Fillers" value={stats?.totalLipBlushing ?? '—'} accent="amber" icon={Heart} />
             <StatCard label="Endolift" value={stats?.totalEndolift ?? '—'} accent="amber" icon={Zap} />
+            <StatCard label="Elder Womens" value={stats?.totalElderWomens ?? '—'} accent="amber" icon={UserRound} />
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">

@@ -8,6 +8,7 @@ import {
   HYDRA_EDITABLE,
   LIP_BLUSHING_FILLERS_EDITABLE,
   ENDOLIFT_EDITABLE,
+  ELDER_WOMENS_EDITABLE,
 } from '@/lib/constants';
 
 const PAGE_SIZE = 15;
@@ -18,6 +19,7 @@ const SHEET_MAP = {
   'hydra': 'Hydra',
   'lip-blushing-fillers': 'Lip Blushing & Fillers',
   'endolift': 'Endolift',
+  'elder-womens': 'Elder Womens',
 };
 
 // Server-side whitelist — enforced regardless of what the client sends, so only
@@ -28,6 +30,7 @@ const EDITABLE_MAP = {
   'hydra': HYDRA_EDITABLE,
   'lip-blushing-fillers': LIP_BLUSHING_FILLERS_EDITABLE,
   'endolift': ENDOLIFT_EDITABLE,
+  'elder-womens': ELDER_WOMENS_EDITABLE,
 };
 
 const LEADS_SHEET_ID = process.env.GOOGLE_LEADS_SHEET_ID;

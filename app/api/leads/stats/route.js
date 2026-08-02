@@ -12,6 +12,7 @@ const LEAD_TABLES = [
   { key: 'hydra', sheet: 'Hydra', trendKey: 'hydra', label: 'Hydra' },
   { key: 'lipBlushing', sheet: 'Lip Blushing & Fillers', trendKey: 'lipBlushingFillers', label: 'Lip Blushing & Fillers' },
   { key: 'endolift', sheet: 'Endolift', trendKey: 'endolift', label: 'Endolift' },
+  { key: 'elderWomens', sheet: 'Elder Womens', trendKey: 'elderWomens', label: 'Elder Womens' },
 ];
 
 export const GET = withErrorHandling(async () => {
@@ -87,6 +88,7 @@ export const GET = withErrorHandling(async () => {
     totalHydra: totals.hydra,
     totalLipBlushing: totals.lipBlushing,
     totalEndolift: totals.endolift,
+    totalElderWomens: totals.elderWomens,
     totalLeads: allRows.length,
     todayLeads,
     byCity,

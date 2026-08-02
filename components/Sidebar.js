@@ -32,6 +32,7 @@ export default function Sidebar({ user }) {
         { href: '/dashboard/leads/hydra', label: 'Hydra' },
         { href: '/dashboard/leads/lip-blushing-fillers', label: 'Lip Blushing & Fillers' },
         { href: '/dashboard/leads/endolift', label: 'Endolift' },
+        { href: '/dashboard/leads/elder-womens', label: 'Elder Womens' },
       ],
     },
     {
