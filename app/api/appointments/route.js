@@ -15,11 +15,15 @@ export const GET = withErrorHandling(async (req) => {
   const q = (searchParams.get('q') || '').toLowerCase().trim();
   const dateFilter = searchParams.get('date') || '';
   const statusFilter = searchParams.get('status') || '';
+  const clientFilter = (searchParams.get('client') || '').trim().toLowerCase();
   const sortDir = searchParams.get('sort') === 'asc' ? 'asc' : 'desc';
   const all = searchParams.get('all') === 'true';
 
   const { rows } = await getSheetRows('Appointments');
   let filtered = rows;
+  if (clientFilter) {
+    filtered = filtered.filter((r) => (r['client name'] || '').trim().toLowerCase() === clientFilter);
+  }
   if (q) {
     filtered = filtered.filter((r) => Object.values(r).some((v) => String(v).toLowerCase().includes(q)));
   }

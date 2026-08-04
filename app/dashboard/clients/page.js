@@ -1,12 +1,13 @@
 'use client';
 import { useEffect, useState } from 'react';
-import { RefreshCw, Plus, Download, Users, UserCheck, UserX, Phone, Pencil, Trash2 } from 'lucide-react';
+import { RefreshCw, Plus, Download, Users, UserCheck, UserX, Phone, Pencil, Trash2, Eye } from 'lucide-react';
 import StatCard from '@/components/StatCard';
 import SearchBar from '@/components/SearchBar';
 import Pagination from '@/components/Pagination';
 import TableSettingsMenu from '@/components/TableSettingsMenu';
 import ImportButton from '@/components/ImportButton';
 import ClientFormModal from '@/components/ClientFormModal';
+import ClientProfileModal from '@/components/ClientProfileModal';
 import ConfirmDialog from '@/components/ConfirmDialog';
 import { CLIENT_COLUMNS } from '@/lib/constants';
 import { exportToExcel } from '@/lib/exportClient';
@@ -28,6 +29,7 @@ export default function ClientsPage() {
   const [formOpen, setFormOpen] = useState(false);
   const [editing, setEditing] = useState(null);
   const [deleting, setDeleting] = useState(null);
+  const [viewing, setViewing] = useState(null);
 
   useEffect(() => {
     const saved = localStorage.getItem(STORAGE_KEY);
@@ -148,7 +150,11 @@ export default function ClientsPage() {
                 <tr><td colSpan={visibleCols.length + 1} className="text-center py-8 text-slate-400">No clients found</td></tr>
               ) : (
                 rows.map((row) => (
-                  <tr key={row.ID} className="border-b border-slate-50 hover:bg-slate-50">
+                  <tr
+                    key={row.ID}
+                    onClick={() => setViewing(row)}
+                    className="border-b border-slate-50 hover:bg-slate-50 cursor-pointer"
+                  >
                     {visibleCols.map((c) => (
                       <td key={c.key} className="px-4 py-3 whitespace-nowrap">
                         {c.key === 'status' ? (
@@ -164,11 +170,14 @@ export default function ClientsPage() {
                     ))}
                     <td className="px-4 py-3">
                       <div className="flex items-center gap-3">
-                        <button onClick={() => { setEditing(row); setFormOpen(true); }} title="Edit" className="p-1.5 rounded-lg text-brand-600 hover:bg-brand-50">
+                        <button onClick={(e) => { e.stopPropagation(); setViewing(row); }} title="View Profile" className="p-1.5 rounded-lg text-slate-500 hover:bg-slate-100">
+                          <Eye size={15} />
+                        </button>
+                        <button onClick={(e) => { e.stopPropagation(); setEditing(row); setFormOpen(true); }} title="Edit" className="p-1.5 rounded-lg text-brand-600 hover:bg-brand-50">
                           <Pencil size={15} />
                         </button>
                         {user?.usertype === 'admin' && (
-                          <button onClick={() => setDeleting(row)} title="Delete" className="p-1.5 rounded-lg text-rose-500 hover:bg-rose-50">
+                          <button onClick={(e) => { e.stopPropagation(); setDeleting(row); }} title="Delete" className="p-1.5 rounded-lg text-rose-500 hover:bg-rose-50">
                             <Trash2 size={15} />
                           </button>
                         )}
@@ -188,6 +197,13 @@ export default function ClientsPage() {
 
       {formOpen && (
         <ClientFormModal initial={editing} onClose={() => setFormOpen(false)} onSaved={() => { setFormOpen(false); loadRows(); loadStats(); }} />
+      )}
+      {viewing && (
+        <ClientProfileModal
+          client={viewing}
+          onClose={() => setViewing(null)}
+          onEdit={(c) => { setViewing(null); setEditing(c); setFormOpen(true); }}
+        />
       )}
       {deleting && (
         <ConfirmDialog

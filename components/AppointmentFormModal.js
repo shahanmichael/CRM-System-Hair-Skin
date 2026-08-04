@@ -1,12 +1,15 @@
 'use client';
 import { useEffect, useState } from 'react';
+import { UserPlus } from 'lucide-react';
 import Modal from './Modal';
+import ClientFormModal from './ClientFormModal';
 import { APPOINTMENT_STATUSES, PLATFORMS } from '@/lib/constants';
 
 export default function AppointmentFormModal({ initial, onClose, onSaved }) {
   const [clients, setClients] = useState([]);
   const [clientsLoading, setClientsLoading] = useState(true);
   const [phoneSuggestions, setPhoneSuggestions] = useState([]);
+  const [showClientForm, setShowClientForm] = useState(false);
   const [form, setForm] = useState({
     clientName: initial?.['client name'] || '',
     treatmentName: initial?.['treatment name'] || '',
@@ -20,11 +23,24 @@ export default function AppointmentFormModal({ initial, onClose, onSaved }) {
   const [error, setError] = useState('');
 
   useEffect(() => {
-    fetch('/api/clients?all=true')
+    loadClients();
+  }, []);
+
+  function loadClients() {
+    setClientsLoading(true);
+    return fetch('/api/clients?all=true')
       .then((r) => r.json())
       .then((data) => setClients(data.data || []))
       .finally(() => setClientsLoading(false));
-  }, []);
+  }
+
+  // Client was added from inside this form — attach them and jump straight back here, pre-filled.
+  function handleClientCreated(newClient) {
+    setClients((cs) => [newClient, ...cs]);
+    setForm((f) => ({ ...f, clientName: newClient['client name'], phoneNumber: newClient.phone || '' }));
+    setPhoneSuggestions([]);
+    setShowClientForm(false);
+  }
 
   const set = (k, v) => setForm((f) => ({ ...f, [k]: v }));
 
@@ -127,7 +143,16 @@ export default function AppointmentFormModal({ initial, onClose, onSaved }) {
           {phoneMatchedClient && <p className="text-xs text-emerald-600 mt-1">Matched: {phoneMatchedClient['client name']}</p>}
         </div>
         <div>
-          <label className="block text-xs font-medium text-slate-500 mb-1">Client</label>
+          <div className="flex items-center justify-between mb-1">
+            <label className="block text-xs font-medium text-slate-500">Client</label>
+            <button
+              type="button"
+              onClick={() => setShowClientForm(true)}
+              className="flex items-center gap-1 text-xs font-medium text-brand-600 hover:text-brand-700"
+            >
+              <UserPlus size={13} /> Add Client
+            </button>
+          </div>
           <select
             required
             value={form.clientName}
@@ -184,6 +209,9 @@ export default function AppointmentFormModal({ initial, onClose, onSaved }) {
           </button>
         </div>
       </form>
+      {showClientForm && (
+        <ClientFormModal onClose={() => setShowClientForm(false)} onSaved={handleClientCreated} />
+      )}
     </Modal>
   );
 }

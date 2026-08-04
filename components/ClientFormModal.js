@@ -31,7 +31,7 @@ export default function ClientFormModal({ initial, onClose, onSaved }) {
       const res = await fetch(url, { method, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(form) });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || 'Failed to save');
-      onSaved();
+      onSaved(data.data);
     } catch (err) {
       setError(err.message);
     } finally {
